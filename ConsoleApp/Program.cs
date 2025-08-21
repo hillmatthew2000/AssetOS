@@ -2,11 +2,11 @@
 
 namespace ConsoleApp;
 
-class program
+public class program
 {
     static void Main()
     {
         Product p1 = new Product();
-        p1.ProductName = 
+        Product.HardwareType p1HT = Product.HardwareType.Server;
     }
 }
