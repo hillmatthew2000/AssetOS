@@ -1,4 +1,4 @@
-namespace ConsoleApp.Models;
+namespace ITAM.ConsoleApp.Models;
 
 public class User
 {

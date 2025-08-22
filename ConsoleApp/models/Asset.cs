@@ -1,10 +1,9 @@
 using System.Reflection.Metadata;
 
-namespace ConsoleApp.Models;
+namespace ITAM.ConsoleApp.Models;
 
-{
 public enum AssetType { Laptop, Desktop, Server }
-public enum AssetStatus { InUser, Avaliable, InRepair, Retired }
+public enum AssetStatus { InUse, Avaliable, InRepair, Retired }
 
 public class Asset
 {
@@ -29,7 +28,5 @@ public class Asset
     public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
     public int LastUpdatedById { get; set; }
     public User? LastUpdatedBy { get; set; }
-
-}
 
 }
