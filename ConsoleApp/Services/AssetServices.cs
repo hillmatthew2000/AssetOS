@@ -22,4 +22,23 @@ public class AssetService
         .ToListAsync();
     }
 
+    public async Task<Asset?> GetAssetByIdAsync(int id)
+    {
+        return await _context.Asset
+        .Include(a => a.AssignedUser)
+        .Include(a => a.LastUpdatedBy)
+        .FirstOrDefaultAsync(a => a.Id == id);
+    }
+
+    // //Made this for fun to test different ways to pull a single asset
+    // public async Task<Asset?> GetAssetByTagAsync(string tag)
+    // {
+    //     return await _context.Asset
+    //     .Include(a => a.AssignedUser)
+    //     .Include(a => a.LastUpdatedBy)
+    //     .FirstOrDefaultAsync(a => a.AssetTag == tag);
+    // }
+
+    
+
 }

@@ -22,7 +22,7 @@ public class Asset
     public int LastUpdatedById { get; set; }
 
     //Navigation properties
-    public User? AssingedUser { get; set; }
+    public User? AssignedUser { get; set; }
     public User? LastUpdatedBy { get; set; }
 
     public string Site { get; set; } = string.Empty;
