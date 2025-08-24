@@ -16,8 +16,15 @@ public class Asset
     public string Cpu { get; set; } = string.Empty;
     public string Ram { get; set; } = string.Empty;
     public string Storage { get; set; } = string.Empty;
+
+    //Foreign key properties
     public int? AssignedUserId { get; set; }
+    public int LastUpdatedById { get; set; }
+
+    //Navigation properties
     public User? AssingedUser { get; set; }
+    public User? LastUpdatedBy { get; set; }
+
     public string Site { get; set; } = string.Empty;
     public string PhysicalLocation { get; set; } = string.Empty;
     public AssetStatus Status { get; set; }
@@ -26,7 +33,4 @@ public class Asset
     public decimal PurchasePrice { get; set; }
     public string Supplier { get; set; } = string.Empty;
     public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
-    public int LastUpdatedById { get; set; }
-    public User? LastUpdatedBy { get; set; }
-
 }
