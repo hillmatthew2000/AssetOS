@@ -16,7 +16,7 @@ public class AssetService
 
     public async Task<List<Asset>> GetAllAssetsAsync()
     {
-        return await _context.Assets
+        return await _context.Asset
         .Include(a => a.AssignedUser)
         .Include(a => a.LastUpdatedBy)
         .ToListAsync();
