@@ -1,5 +1,3 @@
-using System.Reflection.Metadata;
-
 namespace ITAM.ConsoleApp.Models;
 
 public enum AssetType { Laptop, Desktop, Server }

@@ -1,8 +1,5 @@
-using System.Data;
-using System.Security.Cryptography;
 using ITAM.ConsoleApp.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ITAM.ConsoleApp.Data;
 
