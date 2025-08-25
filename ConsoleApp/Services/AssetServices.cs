@@ -1,7 +1,6 @@
 using ITAM.ConsoleApp.Data;
 using ITAM.ConsoleApp.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ITAM.ConsoleApp.Services;
 
