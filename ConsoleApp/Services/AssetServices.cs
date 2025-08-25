@@ -43,7 +43,7 @@ public class AssetService
     //     .FirstOrDefaultAsync(a => a.AssetTag == tag);
     // }
 
-    //Creates a new asset in the database
+    //Creates and saves a new asset in the database, setting default status and last updated timestamp
     public async Task<Asset> CreateAssetAsync(Asset asset)
     {
         //1. Set default values
@@ -61,14 +61,71 @@ public class AssetService
 
     }
 
-    //Update a new asset in the database
+    /* Updates an existing asset in the database with new values provided in the asset parameter.
+    Finds the asset by its identifier, updates its properties, and saves the changes to the database.
+    Returns true if the asset was successfully updated; false if the asset does not exist or an error occurred during update.*/
     public async Task<bool> UpdateAssetAsync(Asset asset)
     {
-        var existingAsset = await _context.Asset.FindAsync();
+        // Find the asset by its Id
+        var existingAsset = await _context.Asset.FindAsync(asset.Id);
         if (existingAsset == null) return false;
 
+        // Update asset properties
         existingAsset.AssetTag = asset.AssetTag;
         existingAsset.SerialNumber = asset.SerialNumber;
         existingAsset.Type = asset.Type;
+        existingAsset.Manufacturer = asset.Manufacturer;
+        existingAsset.Model = asset.Model;
+        existingAsset.Cpu = asset.Cpu;
+        existingAsset.Ram = asset.Ram;
+        existingAsset.Storage = asset.Storage;
+        existingAsset.AssignedUserId = asset.AssignedUserId;
+        existingAsset.Site = asset.Site;
+        existingAsset.PhysicalLocation = asset.PhysicalLocation;
+        existingAsset.Status = asset.Status;
+        existingAsset.PurchaseDate = asset.PurchaseDate;
+        existingAsset.WarrantyExpiry = asset.WarrantyExpiry;
+        existingAsset.PurchasePrice = asset.PurchasePrice;
+        existingAsset.Supplier = asset.Supplier;
+        existingAsset.LastUpdated = DateTime.UtcNow;
+        existingAsset.LastUpdatedById = asset.LastUpdatedById;
+
+        try
+        {
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            // Return false if an error occurs during update
+            return !_context.Asset.Any(e => e.Id == asset.Id);
+        }
+    }
+
+    /* Deletes an asset from the database by its Id.
+    Finds the asset by its identifier, removes it from the context, and saves the changes.
+    Returns true if the asset was successfully deleted; false if the asset does not exist.*/
+    public async Task<bool> DeleteAssetAsync(int id)
+    {
+        // Find the asset by its Id
+        var asset = await _context.Asset.FindAsync(id);
+        if (asset == null) return false;
+
+        // Remove the asset
+        _context.Asset.Remove(asset);
+
+        // Save changes to the database
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<List<Asset>> GetWarrantyExpiringAssetsAsync(int days)
+    {
+        var xDaysFromNow = DateTime.UtcNow.AddDays(days);
+        return await _context.Asset
+        .Where(a => a.WarrantyExpiry.HasValue &&
+        a.WarrantyExpiry <= xDaysFromNow)
+        .ToListAsync();
     }
 }
