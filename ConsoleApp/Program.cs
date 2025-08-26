@@ -146,5 +146,59 @@ public class Program
 
         Console.Write("Last Updated By User ID: ");
         asset.LastUpdatedById = int.Parse(Console.ReadLine() ?? "1");
+
+        try
+        {
+            var newAsset = await _assetService.CreateAssetAsync(asset);
+            Console.WriteLine($"\nAsset created successfully! ID: {newAsset.Id}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"\nError creating asset: {ex.Message}");
+        }
+    }
+
+    private async Task UpdateAsset()
+    {
+        Console.WriteLine("\n=== Update Asset ===");
+        Console.Write("Enter Asset ID to update: ");
+
+        if (!int.TryParse(Console.ReadLine(), out var assetID))
+        {
+            Console.WriteLine("Invalid ID.");
+            return;
+        }
+
+        var asset = await _assetService.GetAssetByIdAsync(assetID);
+        if (asset == null)
+        {
+            Console.WriteLine("Asset not found");
+            return;
+        }
+
+        Console.WriteLine($"current Asset Tag: {asset.AssetTag}");
+        Console.Write("New Asset Tag (leave blank to keep current): ");
+        var newTag = Console.ReadLine();
+        if (!string.IsNullOrEmpty(newTag))
+            asset.AssetTag = newTag;
+
+        Console.WriteLine($"Current Status: {asset.Status}");
+        Console.WriteLine("New Status:");
+        Console.WriteLine("1. In Use");
+        Console.WriteLine("2. Available");
+        Console.WriteLine("3. In Repair");
+        Console.WriteLine("4. Retired");
+        Console.WriteLine("Select Status:");
+        var statusInput = Console.ReadLine();
+        if (!string.IsNullOrEmpty(statusInput))
+            asset.Status = (AssetStatus)(int.Parse(statusInput) - 1);
+
+        Console.WriteLine("Available Users:");
+        var users = await _userService.GetAllUsersAsync();
+        foreach (var user in users)
+        {
+            Console.WriteLine($"{user.Id} {user.Name} ({user.Department})");
+        }
+
     }
 }
