@@ -3,6 +3,7 @@ using ITAM.ConsoleApp.Data;
 using ITAM.ConsoleApp.Models;
 using ITAM.ConsoleApp.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace ConsoleApp;
 
@@ -40,6 +41,27 @@ public class Program
             {
                 case "1":
                     await ListAllAssets();
+                    break;
+                case "2":
+                    await AddNewAsset();
+                    break;
+                case "3":
+                    await UpdateAsset();
+                    break;
+                case "4":
+                    await DeleteAsset();
+                    break;
+                case "5":
+                    await ListUsers();
+                    break;
+                case "6":
+                    await WarrantyExpiryReport();
+                    break;
+                case "7":
+                    running = false;
+                    break;
+                default:
+                    Console.WriteLine("invalide option. Please try again.");
                     break;
             }
         }
@@ -159,7 +181,7 @@ public class Program
         }
     }
 
-    private async Task UpdateAsset()
+    private static async Task UpdateAsset()
     {
         Console.WriteLine("\n=== Update Asset ===");
         Console.Write("Enter Asset ID to update: ");
@@ -241,7 +263,7 @@ public class Program
         }
     }
 
-    private static async Task ListUser()
+    private static async Task ListUsers()
     {
         Console.WriteLine("\n=== All Users ===");
         var users = await _userService.GetAllUsersAsync();
