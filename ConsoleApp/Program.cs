@@ -1,4 +1,5 @@
-﻿using ITAM.ConsoleApp.Data;
+﻿using System.Runtime.CompilerServices;
+using ITAM.ConsoleApp.Data;
 using ITAM.ConsoleApp.Models;
 using ITAM.ConsoleApp.Services;
 using Microsoft.EntityFrameworkCore;
@@ -199,6 +200,94 @@ public class Program
         {
             Console.WriteLine($"{user.Id} {user.Name} ({user.Department})");
         }
+        Console.Write($"Assign to User ID (current: {asset.AssignedUserId}) (leave blank to keep current): ");
+        var userIdInput = Console.ReadLine();
+        if (!string.IsNullOrEmpty(userIdInput) && int.TryParse(userIdInput, out var userId))
+            asset.AssignedUserId = userId;
+
+        Console.Write($"Last Updated By User ID: ");
+        asset.LastUpdatedById = int.Parse(Console.ReadLine() ?? "1");
+
+        try
+        {
+            bool success = await _assetService.UpdateAssetAsync(asset);
+            Console.WriteLine(success ? "\nAsset updated successfully!" : "\nFailed to update asset.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"\nError updating asset: {ex.Message}");
+        }
+    }
+
+    private static async Task DeleteAsset()
+    {
+        Console.WriteLine("\n===Delete Asset ===");
+        Console.Write("Enter Asset ID to delet: ");
+
+        if (!int.TryParse(Console.ReadLine(), out var assetid))
+        {
+            Console.WriteLine("Invalide ID");
+            return;
+        }
+
+        try
+        {
+            var success = await _assetService.DeleteAssetAsync(assetid);
+            Console.WriteLine(success ? "\nAsset deleted successfully!" : "\nAsset not found.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"\nError deleting asset: {ex.Message}");
+        }
+    }
+
+    private static async Task ListUser()
+    {
+        Console.WriteLine("\n=== All Users ===");
+        var users = await _userService.GetAllUsersAsync();
+
+        if (!users.Any())
+        {
+            Console.WriteLine("No users found.");
+            return;
+        }
+
+        foreach (var user in users)
+        {
+            Console.WriteLine($"ID: {user.Id}");
+            Console.WriteLine($"Name: {user.Name}");
+            Console.WriteLine($"Email: {user.Email}");
+            Console.WriteLine($"Department: {user.Department}");
+            Console.WriteLine("----------------------------------");
+        }
+    }
+
+    private static async Task WarrantyExpiryReport()
+    {
+        Console.WriteLine("Enter the number of days to check for upcoming warranty expirations:");
+        int.TryParse(Console.ReadLine(), out int days);
+        Console.WriteLine("\n=== Warranty Expiry Report ===");
+        var assets = await _assetService.GetWarrantyExpiringAssetsAsync(days);
+
+        if (!assets.Any())
+        {
+            Console.WriteLine("No assets with expiring warranties in the next");
+            return;
+        }
+
+        foreach (var asset in assets)
+        {
+            Console.WriteLine($"ID: {asset.Id}");
+            Console.WriteLine($"Tag: {asset.AssetTag}");
+            Console.WriteLine($"Model: {asset.Manufacturer} {asset.Model}");
+            Console.WriteLine($"Warranty Expires: {asset.WarrantyExpiry?.ToString("yyyy-MM-dd")}");
+            Console.WriteLine($"Days Remaining: {(asset.WarrantyExpiry - DateTime.UtcNow)?.Days}");
+            Console.WriteLine("----------------------------------");
+        }
 
     }
+
+
+
+
 }
