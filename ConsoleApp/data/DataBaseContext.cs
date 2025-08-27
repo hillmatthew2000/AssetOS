@@ -19,6 +19,20 @@ public class ITAMDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //Configure Asset -> AssignedUser relationship
+        modelBuilder.Entity<Asset>()
+        .HasOne(a => a.AssignedUser)
+        .WithMany(u => u.AssignedAssets)
+        .HasForeignKey(a => a.AssignedUserId)
+        .OnDelete(DeleteBehavior.SetNull);
+
+        //Configure Asset -> LastUpdatedBy relationship
+        modelBuilder.Entity<Asset>()
+        .HasOne(a => a.LastUpdatedBy)
+        .WithMany(u => u.UpdatedAssets)
+        .HasForeignKey(a => a.LastUpdatedById)
+        .OnDelete(DeleteBehavior.Restrict);
+
         //Seed initial data for both tables
         modelBuilder.Entity<User>().HasData(
             new User
