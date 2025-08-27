@@ -1,6 +1,7 @@
 ﻿using ITAM.ConsoleApp.Data;
 using ITAM.ConsoleApp.Models;
 using ITAM.ConsoleApp.Services;
+using Spectre.Console;
 
 namespace ConsoleApp;
 
@@ -16,11 +17,10 @@ public class Program
         //Ensures that the "database" is created
         await _context.Database.EnsureCreatedAsync();
 
-        //Displays header for program
-        Console.WriteLine("=== IT Asset Management System ===");
-        Console.WriteLine("Phase 1 - Core Hardware Tracking\n");
+        //Display AssetOS header using Spectre.Console
+        DisplayAssetOSHeader();
 
-        //Initalize program and display main menu
+        //Initialize program and display main menu
         bool running = true;
         while (running)
         {
@@ -64,10 +64,9 @@ public class Program
         }
 
         Console.WriteLine("Thank you for using AssetOS!");
-
-
     }
 
+    //Retrieves and displays all assets with their details
     private static async Task ListAllAssets()
     {
         Console.WriteLine("\n=== All Assets ===");
@@ -79,6 +78,7 @@ public class Program
             return;
         }
 
+        //Display each asset's information
         foreach (var asset in assets)
         {
             Console.WriteLine($"ID: {asset.Id}");
@@ -93,28 +93,27 @@ public class Program
         }
     }
 
+    //Prompts user for asset details and creates a new asset
     private static async Task AddNewAsset()
     {
         var asset = new Asset();
 
-        Console.Write("Asset Tag: ");
+        Console.Write("\nAsset Tag: ");
         asset.AssetTag = Console.ReadLine() ?? string.Empty;
 
         Console.Write("Serial Number: ");
         asset.SerialNumber = Console.ReadLine() ?? string.Empty;
 
+        //Display asset type options and get user selection
         Console.WriteLine("Asset Type:");
         Console.WriteLine("1. Laptop");
         Console.WriteLine("2. Desktop");
         Console.WriteLine("3. Server");
-        Console.WriteLine("Select Type: ");
+        Console.Write("Select Type: ");
         asset.Type = (AssetType)(int.Parse(Console.ReadLine() ?? "1") - 1);
 
         Console.Write("Manufacturer: ");
         asset.Manufacturer = Console.ReadLine() ?? string.Empty;
-
-        Console.Write("Model: ");
-        asset.Model = Console.ReadLine() ?? string.Empty;
 
         Console.Write("Model: ");
         asset.Model = Console.ReadLine() ?? string.Empty;
@@ -134,6 +133,7 @@ public class Program
         Console.Write("Physical Location: ");
         asset.PhysicalLocation = Console.ReadLine() ?? string.Empty;
 
+        //Parse date inputs with validation
         Console.Write("Purchase Date (YYYY-MM-DD): ");
         if (DateTime.TryParse(Console.ReadLine(), out var purchaseDate))
             asset.PurchaseDate = purchaseDate;
@@ -149,6 +149,7 @@ public class Program
         Console.WriteLine("Supplier: ");
         asset.Supplier = Console.ReadLine() ?? string.Empty;
 
+        //Show available users for assignment
         Console.WriteLine("Available Users: ");
         var Users = await _userService.GetAllUsersAsync();
 
@@ -178,6 +179,7 @@ public class Program
         }
     }
 
+    //Updates existing asset with new values from user input
     private static async Task UpdateAsset()
     {
         Console.WriteLine("\n=== Update Asset ===");
@@ -196,12 +198,14 @@ public class Program
             return;
         }
 
+        //Update asset tag if new value provided
         Console.WriteLine($"current Asset Tag: {asset.AssetTag}");
         Console.Write("New Asset Tag (leave blank to keep current): ");
         var newTag = Console.ReadLine();
         if (!string.IsNullOrEmpty(newTag))
             asset.AssetTag = newTag;
 
+        //Update status if new value provided
         Console.WriteLine($"Current Status: {asset.Status}");
         Console.WriteLine("New Status:");
         Console.WriteLine("1. In Use");
@@ -213,6 +217,7 @@ public class Program
         if (!string.IsNullOrEmpty(statusInput))
             asset.Status = (AssetStatus)(int.Parse(statusInput) - 1);
 
+        //Show available users and update assignment if new value provided
         Console.WriteLine("Available Users:");
         var users = await _userService.GetAllUsersAsync();
         foreach (var user in users)
@@ -238,6 +243,7 @@ public class Program
         }
     }
 
+    //Deletes an asset by ID after getting user input
     private static async Task DeleteAsset()
     {
         Console.WriteLine("\n===Delete Asset ===");
@@ -260,6 +266,7 @@ public class Program
         }
     }
 
+    //Retrieves and displays all users in the system
     private static async Task ListUsers()
     {
         Console.WriteLine("\n=== All Users ===");
@@ -271,6 +278,7 @@ public class Program
             return;
         }
 
+        //Display each user's information
         foreach (var user in users)
         {
             Console.WriteLine($"ID: {user.Id}");
@@ -281,6 +289,7 @@ public class Program
         }
     }
 
+    //Generates report of assets with warranties expiring within specified days
     private static async Task WarrantyExpiryReport()
     {
         Console.WriteLine("Enter the number of days to check for upcoming warranty expirations:");
@@ -294,6 +303,7 @@ public class Program
             return;
         }
 
+        //Display warranty information for each expiring asset
         foreach (var asset in assets)
         {
             Console.WriteLine($"ID: {asset.Id}");
@@ -303,6 +313,41 @@ public class Program
             Console.WriteLine($"Days Remaining: {(asset.WarrantyExpiry - DateTime.UtcNow)?.Days}");
             Console.WriteLine("----------------------------------");
         }
+    }
 
+    //Method that creates a beautiful AssetOS header using Spectre.Console
+    private static void DisplayAssetOSHeader()
+    {
+        //Clear console for clean display
+        AnsiConsole.Clear();
+
+        //Create a beautiful panel with AssetOS title
+        var panel = new Panel(
+            new FigletText("AssetOS")
+                .Centered()
+                .Color(Spectre.Console.Color.Cyan1))
+        {
+            Border = BoxBorder.Double,
+            BorderStyle = new Style(foreground: Spectre.Console.Color.Cyan1),
+            Header = new PanelHeader(" [bold yellow]IT Asset Management System[/] "),
+            Padding = new Padding(2, 1, 2, 1)
+        };
+
+        AnsiConsole.Write(panel);
+
+        //Add a stylized subtitle
+        var subtitle = new Rule("[bold blue]Phase 1 - Core Hardware Tracking[/]")
+        {
+            Style = Style.Parse("cyan1"),
+            Justification = Justify.Center
+        };
+
+        AnsiConsole.Write(subtitle);
+
+        //Add some spacing
+        AnsiConsole.WriteLine();
+
+        //Set console foreground color to yellow for subsequent menu text
+        Console.ForegroundColor = ConsoleColor.Yellow;
     }
 }

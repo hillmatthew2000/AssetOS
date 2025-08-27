@@ -15,15 +15,15 @@ public class UserService
         _context = context;
     }
 
-    //Retrieves all users including related
+    //Retrieves all users from the database
     public async Task<List<User>> GetAllUsersAsync()
     {
         return await _context.User.ToListAsync();
     }
 
-    //Retrieves a single User by its Id
-    public async Task<Asset?> GetUserByIdAsync(int id)
+    //Retrieves a single user by their ID - returns null if not found
+    public async Task<User?> GetUserByIdAsync(int id)
     {
-        return await _context.Asset.FindAsync(id);
+        return await _context.User.FindAsync(id);
     }
 }

@@ -3,20 +3,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ITAM.ConsoleApp.Data;
 
-//Class to inherent from the DbContext class of MSEFCore
+//Database context class inheriting from Entity Framework's DbContext
 public class ITAMDbContext : DbContext
 {
-    //Creates tables for both properties that can be added to and queried
+    //DbSet properties representing database tables that can be queried and modified
     public DbSet<Asset> Asset => Set<Asset>();
     public DbSet<User> User => Set<User>();
 
-    //Method that configures the database connection
+    //Configures the database connection and options
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        //Uses a temporary, fake DB in RAM named ITAMDb
+        //Uses an in-memory database for temporary storage during application runtime
         optionsBuilder.UseInMemoryDatabase("ITAMDb");
     }
 
+    //Configures entity relationships and seeds initial data
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         //Configure Asset -> AssignedUser relationship
@@ -33,7 +34,7 @@ public class ITAMDbContext : DbContext
         .HasForeignKey(a => a.LastUpdatedById)
         .OnDelete(DeleteBehavior.Restrict);
 
-        //Seed initial data for both tables
+        //Seed initial user data for testing and demonstration
         modelBuilder.Entity<User>().HasData(
             new User
             {
@@ -50,6 +51,7 @@ public class ITAMDbContext : DbContext
                 Department = "IT Support"
             });
 
+        //Seed initial asset data for testing and demonstration
         modelBuilder.Entity<Asset>().HasData(
             new Asset
             {
@@ -70,12 +72,8 @@ public class ITAMDbContext : DbContext
                 WarrantyExpiry = new DateTime(2026, 1, 15),
                 PurchasePrice = 1299.99m,
                 Supplier = "CDW",
-                LastUpdatedById = 2
+                LastUpdatedById = 2,
+                LastUpdated = new DateTime(2025, 8, 1)
             });
-            
-            
-            
     }
-
-
 }
