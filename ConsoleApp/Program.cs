@@ -1,9 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-using ITAM.ConsoleApp.Data;
+﻿using ITAM.ConsoleApp.Data;
 using ITAM.ConsoleApp.Models;
 using ITAM.ConsoleApp.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace ConsoleApp;
 
@@ -244,7 +241,7 @@ public class Program
     private static async Task DeleteAsset()
     {
         Console.WriteLine("\n===Delete Asset ===");
-        Console.Write("Enter Asset ID to delet: ");
+        Console.Write("Enter Asset ID to delete: ");
 
         if (!int.TryParse(Console.ReadLine(), out var assetid))
         {
@@ -308,8 +305,4 @@ public class Program
         }
 
     }
-
-
-
-
 }
