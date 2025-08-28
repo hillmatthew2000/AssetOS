@@ -319,7 +319,7 @@ public class Program
     private static void DisplayAssetOSHeader()
     {
         //Clear console for clean display
-        AnsiConsole.Clear();
+        Console.Clear();
 
         //Create a beautiful panel with AssetOS title
         var panel = new Panel(
