@@ -142,11 +142,11 @@ public class Program
         if (DateTime.TryParse(Console.ReadLine(), out var warrantyExpiry))
             asset.WarrantyExpiry = warrantyExpiry;
 
-        Console.WriteLine("Purchase Price: ");
+        Console.Write("Purchase Price: ");
         if (decimal.TryParse(Console.ReadLine(), out decimal price))
             asset.PurchasePrice = price;
 
-        Console.WriteLine("Supplier: ");
+        Console.Write("Supplier: ");
         asset.Supplier = Console.ReadLine() ?? string.Empty;
 
         //Show available users for assignment
@@ -299,7 +299,7 @@ public class Program
 
         if (!assets.Any())
         {
-            Console.WriteLine("No assets with expiring warranties in the next");
+            Console.WriteLine($"No assets with expiring warranties in the next {days} days");
             return;
         }
 

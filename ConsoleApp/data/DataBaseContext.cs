@@ -56,7 +56,7 @@ public class ITAMDbContext : DbContext
             new Asset
             {
                 Id = 1,
-                AssetTag = "LAP-1001",
+                AssetTag = "LAP-001",
                 SerialNumber = "5CD92927XFL",
                 Type = AssetType.Laptop,
                 Manufacturer = "Dell",
