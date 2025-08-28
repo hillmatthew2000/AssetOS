@@ -17,7 +17,6 @@ public class Program
         //Ensures that the "database" is created
         await _context.Database.EnsureCreatedAsync();
 
-        //Display AssetOS header using Spectre.Console
         DisplayAssetOSHeader();
 
         //Initialize program and display main menu
@@ -329,7 +328,7 @@ public class Program
         {
             Border = BoxBorder.Double,
             BorderStyle = new Style(foreground: Spectre.Console.Color.Cyan1),
-            Header = new PanelHeader(" [bold yellow]IT Asset Management System[/] "),
+            Header = new PanelHeader("[bold yellow]IT Asset Management System[/]"),
             Padding = new Padding(2, 1, 2, 1)
         };
 
@@ -350,4 +349,5 @@ public class Program
         //Set console foreground color to yellow for subsequent menu text
         Console.ForegroundColor = ConsoleColor.Yellow;
     }
-}
+        
+    }
