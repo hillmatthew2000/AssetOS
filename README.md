@@ -8,7 +8,6 @@
 
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4)
 ![Language](https://img.shields.io/badge/Language-C%23-239120)
-![C#](https://img.shields.io/badge/Language-C%23-239120)
 ![EF Core](https://img.shields.io/badge/ORM-EF%20Core-512BD4)
 ![License](https://img.shields.io/badge/License-MIT-brightgreen)
 ![Project Type](https://img.shields.io/badge/Type-Console%20App-orange)
