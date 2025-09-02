@@ -1,4 +1,4 @@
-# ⚡ AssetOS: Intelligent Asset Management Console
+# ⚡ AssetOS: IT Asset Management Console
 
 *A lightweight .NET 8.0 console application engineered for digital and physical asset management with clean architecture and extensible design.*
 
