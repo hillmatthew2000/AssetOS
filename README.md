@@ -16,7 +16,7 @@
 
 ## 📚 Table of Contents
 
-- [⚡ AssetOS: Intelligent Asset Management Console](#-assetos-intelligent-asset-management-console)
+- [⚡ AssetOS: IT Asset Management Console](#-assetos-it-asset-management-console)
   - [🏅 Badges](#-badges)
   - [📚 Table of Contents](#-table-of-contents)
   - [🎯 Objective](#-objective)
