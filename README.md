@@ -1,4 +1,3 @@
-Final Draft README.md
 # AssetOS
 
 AssetOS is a .NET 8 console application for managing digital and physical assets.  
