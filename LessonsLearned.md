@@ -1,6 +1,17 @@
 # IT Asset Management System: Technical Study Notes
 
-## 1. Project Overview
+<!-- Table of Contents -->
+- [📌 Project Overview](#project-overview)
+- [⚡ Asynchronous Programming](#asynchronous-programming)
+- [🗄️ Entity Framework Core](#entity-framework-core)
+- [🧱 Database Design](#database-design)
+- [🛠️ Error Handling](#error-handling)
+- [✅ Best Practices](#best-practices)
+- [💡 Key Learnings](#key-learnings)
+- [🚀 Next Steps](#next-steps)
+- [📚 Quick Reference](#quick-reference)
+
+## 📌 Project Overview
 
 ### Objective
 Build a console-based IT Asset Management (ITAM) system tracking hardware assets (laptops, desktops, servers)
@@ -8,12 +19,11 @@ Build a console-based IT Asset Management (ITAM) system tracking hardware assets
 ### Technology Stack
 - **C#** with .NET
 - **Entity Framework Core (EF Core)** for data access
-- **SQLite** for persistent storage
-- **Console UI** for user interaction
+- **Spectre.Console** for user interaction
 
 ---
 
-## 2. Asynchronous Programming in C#
+## ⚡ Asynchronous Programming in C#
 
 ### Key Concepts
 
@@ -35,7 +45,7 @@ Build a console-based IT Asset Management (ITAM) system tracking hardware assets
 
 ---
 
-## 3. Microsoft Entity Framework Core (EF Core)
+## 🗄️ Microsoft Entity Framework Core (EF Core)
 
 ### Overview
 - **ORM (Object-Relational Mapper)**: Maps C# objects to database tables
@@ -65,13 +75,9 @@ Build a console-based IT Asset Management (ITAM) system tracking hardware assets
 - **Pros**: Fast, no setup required, ideal for testing
 - **Cons**: Data lost on application restart
 
-#### SQLite
-- **Pros**: Persistent storage, file-based, zero configuration
-- **Cons**: Limited concurrency support, no server mode
-
 ---
 
-## 4. Database Design
+## 🧱 Database Design
 
 ### Entity Models
 - **Asset Entity**: Represents hardware assets with properties like AssetTag, SerialNumber, Type, etc.
@@ -88,7 +94,7 @@ Build a console-based IT Asset Management (ITAM) system tracking hardware assets
 
 ---
 
-## 5. Error Handling
+## 🛠️ Error Handling
 
 ### Common Issues
 
@@ -106,22 +112,7 @@ Build a console-based IT Asset Management (ITAM) system tracking hardware assets
 
 ---
 
-## 6. Migration from In-Memory to SQLite
-
-### Steps
-1. **Update NuGet Packages**: Remove in-memory provider, add SQLite provider
-2. **Modify DbContext Configuration**: Update connection string to use SQLite
-3. **Update Database Initialization**: Ensure database is created on startup
-
-### Considerations
-- **Data Persistence**: SQLite maintains data between application runs
-- **File Location**: Store database in user-writable location
-- **Concurrency**: SQLite has simpler concurrency than SQL Server
-- **Data Types**: SQLite stores dates as TEXT, decimals as TEXT
-
----
-
-## 7. Best Practices
+## ✅ Best Practices
 
 ### Code Organization
 - **Separation of Concerns**: Organize code into Models, Data, Services, and UI layers
@@ -141,7 +132,7 @@ Build a console-based IT Asset Management (ITAM) system tracking hardware assets
 
 ---
 
-## 8. Key Learnings and Takeaways
+## 💡 Key Learnings and Takeaways
 
 ### Asynchronous Programming
 - Essential for I/O operations in modern applications
@@ -166,11 +157,10 @@ Build a console-based IT Asset Management (ITAM) system tracking hardware assets
 ### Migration Strategies
 - Switching database providers is straightforward with EF Core
 - Business logic remains unchanged during migration
-- SQLite provides a good balance between simplicity and persistence
 
 ---
 
-## 9. Next Steps
+## 🚀 Next Steps
 
 ### Immediate Enhancements
 - Implement additional asset properties (MAC Address, IP Address, etc.)
@@ -184,7 +174,7 @@ Build a console-based IT Asset Management (ITAM) system tracking hardware assets
 
 ---
 
-## Quick Reference
+## 📚 Quick Reference
 
 ### Essential EF Core Commands
 ```csharp
@@ -209,5 +199,4 @@ modelBuilder.Entity<Asset>()
 ---
 
 *Study Notes - IT Asset Management System Project*  
-*Generated: [Current Date]*  
-*Technology Stack: C#, .NET, Entity Framework Core, SQLite*
+*Technology Stack: C#, .NET, Entity Framework Core, Spectre.Console*
