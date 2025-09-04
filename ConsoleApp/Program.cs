@@ -1,21 +1,40 @@
 ﻿using ITAM.ConsoleApp.Data;
 using ITAM.ConsoleApp.Models;
 using ITAM.ConsoleApp.Services;
+using Microsoft.EntityFrameworkCore;
 using Spectre.Console;
 
 namespace ConsoleApp;
 
 public class Program
 {
-    //Creates new instance of the ITAMDbContext class essentially making the "database"
-    private static ITAMDbContext _context = new();
-    //Creates new instance of both AssetService and UserService classes with the "database" as parameter
-    private static AssetService _assetService = new(_context);
-    private static UserService _userService = new(_context);
+    //Static fields so all static methods can access the context and services
+    private static ITAMDbContext? _context;
+    private static AssetService? _assetService;
+    private static UserService? _userService;
+
     static async Task Main(string[] args)
     {
+        //Creates DbContext options for SQLite
+        var options = new DbContextOptionsBuilder<ITAMDbContext>()
+        .UseSqlite($"Data Source=Itam.db").Options;
+
+        //Creates new instance of the ITAMDbContext class essentially making the "database"
+        _context = new ITAMDbContext(options);
+
         //Ensures that the "database" is created
         await _context.Database.EnsureCreatedAsync();
+
+        //Initialize services and assign to static fields so other methods can use them
+        _assetService = new AssetService(_context);
+        _userService = new UserService(_context);
+
+        //sanity check - these must be initialized for static methods to work
+        if (_assetService == null || _userService == null)
+        {
+            Console.WriteLine("Failed to initialize services.");
+            return;
+        }
 
         DisplayAssetOSHeader();
 
@@ -94,7 +113,7 @@ public class Program
     private static async Task ListAllAssets()
     {
         Console.WriteLine("\n=== All Assets ===");
-        var assets = await _assetService.GetAllAssetsAsync();
+    var assets = await _assetService!.GetAllAssetsAsync();
 
         if (!assets.Any())
         {
@@ -175,7 +194,7 @@ public class Program
 
         //Show available users for assignment
         Console.WriteLine("Available Users: ");
-        var Users = await _userService.GetAllUsersAsync();
+            var Users = await _userService!.GetAllUsersAsync();
 
         foreach (var user in Users)
         {
@@ -194,7 +213,7 @@ public class Program
 
         try
         {
-            var newAsset = await _assetService.CreateAssetAsync(asset);
+                var newAsset = await _assetService!.CreateAssetAsync(asset);
             Console.WriteLine($"\nAsset created successfully! ID: {newAsset.Id}");
         }
         catch (Exception ex)
@@ -215,7 +234,7 @@ public class Program
             return;
         }
 
-        var asset = await _assetService.GetAssetByIdAsync(assetID);
+    var asset = await _assetService!.GetAssetByIdAsync(assetID);
         if (asset == null)
         {
             Console.WriteLine("Asset not found");
@@ -243,7 +262,7 @@ public class Program
 
         //Show available users and update assignment if new value provided
         Console.WriteLine("Available Users:");
-        var users = await _userService.GetAllUsersAsync();
+    var users = await _userService!.GetAllUsersAsync();
         foreach (var user in users)
         {
             Console.WriteLine($"{user.Id} {user.Name} ({user.Department})");
@@ -279,7 +298,7 @@ public class Program
             return;
         }
 
-        var asset = await _assetService.GetAssetByIdAsync(assetID);
+    var asset = await _assetService!.GetAssetByIdAsync(assetID);
         if (asset == null)
         {
             Console.WriteLine("Asset not found");
@@ -456,7 +475,7 @@ public class Program
             case "16":
             {
             Console.WriteLine("Available Users:");
-            var specificUsers = await _userService.GetAllUsersAsync();
+            var specificUsers = await _userService!.GetAllUsersAsync();
             foreach (var user in specificUsers)
             {
                 Console.WriteLine($"{user.Id} {user.Name} ({user.Department})");
@@ -484,7 +503,7 @@ public class Program
         
         try
         {
-            bool success = await _assetService.UpdateAssetAsync(asset);
+            bool success = await _assetService!.UpdateAssetAsync(asset);
             Console.WriteLine(success ? "\nAsset updated successfully!" : "\nFailed to update asset.");
         }
         catch (Exception ex)
@@ -507,7 +526,7 @@ public class Program
 
         try
         {
-            var success = await _assetService.DeleteAssetAsync(assetid);
+            var success = await _assetService!.DeleteAssetAsync(assetid);
             Console.WriteLine(success ? "\nAsset deleted successfully!" : "\nAsset not found.");
         }
         catch (Exception ex)
@@ -520,7 +539,7 @@ public class Program
     private static async Task ListUsers()
     {
         Console.WriteLine("\n=== All Users ===");
-        var users = await _userService.GetAllUsersAsync();
+    var users = await _userService!.GetAllUsersAsync();
 
         if (!users.Any())
         {
@@ -545,7 +564,7 @@ public class Program
         Console.WriteLine("Enter the number of days to check for upcoming warranty expirations:");
         int.TryParse(Console.ReadLine(), out int days);
         Console.WriteLine("\n=== Warranty Expiry Report ===");
-        var assets = await _assetService.GetWarrantyExpiringAssetsAsync(days);
+    var assets = await _assetService!.GetWarrantyExpiringAssetsAsync(days);
 
         if (!assets.Any())
         {
@@ -586,7 +605,7 @@ public class Program
         AnsiConsole.Write(panel);
 
         //Add a stylized subtitle
-        var subtitle = new Rule("[bold blue]Phase 1 - Core Hardware Tracking[/]")
+        var subtitle = new Rule("[bold blue]Phase 2 - SQLite Database Backend[/]")
         {
             Style = Style.Parse("cyan1"),
             Justification = Justify.Center

@@ -10,11 +10,27 @@ public class ITAMDbContext : DbContext
     public DbSet<Asset> Asset => Set<Asset>();
     public DbSet<User> User => Set<User>();
 
+    //Constructor to accept DbContextOptions
+    public ITAMDbContext(DbContextOptions<ITAMDbContext> options) : base(options) { }
+
     //Configures the database connection and options
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        //Uses an in-memory database for temporary storage during application runtime
-        optionsBuilder.UseInMemoryDatabase("ITAMDb");
+        //Checks to see if optionsBuilder is already configured
+        if (!optionsBuilder.IsConfigured)
+        {
+            //Define the path for the SQLite database file
+            var dbPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "ConsoleApp",
+            "Itam.db");
+
+            //Ensure the directory exists
+            Directory.CreateDirectory(Path.GetDirectoryName(dbPath));
+
+            //Uses a SQLite database for permanent storage
+            optionsBuilder.UseSqlite($"Data Source={dbPath}");
+        }
     }
 
     //Configures entity relationships and seeds initial data
