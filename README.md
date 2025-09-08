@@ -8,7 +8,9 @@
 
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4)
 ![Language](https://img.shields.io/badge/Language-C%23-239120)
-![EF Core](https://img.shields.io/badge/ORM-EF%)**SQLite database file issues**
+![EF Core](https://img.shields.io/badge/ORM-EF%20Core-512BD4)
+![SQLite](https://img.shields.io/badge/Database-SQLite-003B57)
+**SQLite database file issues**
 - 📁 Database file `Itam.db` created automatically in ConsoleApp directory
 - 🔒 Ensure write permissions in application directory
 - 🗑️ Delete `Itam.db` to reset database (will recreate with seed data)
