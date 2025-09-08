@@ -8,7 +8,21 @@
 
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4)
 ![Language](https://img.shields.io/badge/Language-C%23-239120)
-![EF Core](https://img.shields.io/badge/ORM-EF%20Core-512BD4)
+![EF Core](https://img.shields.io/badge/ORM-EF%**SQLite database file issues**
+- 📁 Database file `Itam.db` created automatically in ConsoleApp directory
+- 🔒 Ensure write permissions in application directory
+- 🗑️ Delete `Itam.db` to reset database (will recreate with seed data)
+
+**Performance issues with large datasets**
+- ⚡ Current version optimized for small to medium datasets  
+- 🔮 Enterprise performance optimizations planned
+- 💡 Consider implementing pagination for large lists
+
+**Manager architecture questions**
+- 📋 **MenuManager**: Controls navigation and user flow
+- 🎨 **DisplayManager**: Handles UI rendering and formatting
+- 📦 **AssetManager**: Manages asset operations and workflows
+- 👤 **UserManager**: Handles user-related operationsre-512BD4)
 ![License](https://img.shields.io/badge/License-MIT-brightgreen)
 ![Project Type](https://img.shields.io/badge/Type-Console%20App-orange)
 
@@ -55,10 +69,11 @@ This application benefits **developers, IT professionals, and small to medium bu
 - **Interactive Console UI** – Powered by Spectre.Console for rich, user-friendly interactions
 - **Complete Asset Lifecycle** – Create, read, update, delete assets with full CRUD operations  
 - **User Management System** – Manage users and assign asset ownership relationships
-- **Entity Framework Core** – Robust data persistence with in-memory database support
+- **SQLite Database** – Persistent data storage with SQLite database backend
+- **Manager Architecture** – Organized manager classes for UI, menus, assets, and users
 - **Modular Service Architecture** – Separated `AssetServices` and `UserServices` for maintainability
 - **Cross-Platform Ready** – Runs on Windows, macOS, and Linux via .NET 8.0
-- **Extensible Design** – Clean separation of concerns for future enterprise features
+- **Extensible Design** – Clean separation of concerns with OOP principles for enterprise features
 
 ---
 
@@ -67,23 +82,33 @@ This application benefits **developers, IT professionals, and small to medium bu
 ```
 AssetOS/
 ├── ConsoleApp/
-│   ├── Program.cs                    # Entry point of the console application
-│   ├── data/
-│   │   └── DataBaseContext.cs        # Entity Framework Core DbContext
-│   ├── models/
-│   │   ├── Asset.cs                  # Asset entity model
-│   │   └── User.cs                   # User entity model
+│   ├── Program.cs
+│   ├── consoleapp.sln
+│   ├── ConsoleApp.csproj
+│   ├── Itam.db
+│   ├── Data/
+│   │   └── DataBaseContext.cs
+│   ├── Models/
+│   │   ├── Asset.cs
+│   │   └── User.cs
+│   ├── Managers/
+│   │   ├── AssetManager.cs
+│   │   ├── DisplayManager.cs
+│   │   ├── MenuManager.cs
+│   │   └── UserManager.cs
 │   ├── Services/
-│   │   ├── AssetServices.cs          # Business logic for asset operations
-│   │   └── UserServices.cs           # Business logic for user operations
-│   ├── ConsoleApp.csproj             # Project file with dependencies
-│   └── obj/                          # Build artifacts (auto-generated)
-├── LICENSE                           # MIT License
-├── LessonsLearned.md                 # Development notes and insights
-└── .gitignore                        # Git ignore rules
+│   │   ├── AssetServices.cs
+│   │   └── UserServices.cs
+│   ├── bin/
+│   └── obj/
+├── LICENSE
+├── LessonsLearned.md
+├── Phase 2 - SQLite Migration Checklist.md
+├── README.md
+└── .gitignore
 ```
 
-This structure implements **clean architecture principles** with clear separation between **models**, **data access**, and **business services**, making the project modular and enterprise-ready.
+This structure implements **clean architecture principles** with clear separation between **models**, **data access**, **business services**, and **presentation managers**, making the project modular and enterprise-ready. The recent OOP refactor introduced dedicated manager classes for better separation of concerns and maintainability.
 
 ---
 
@@ -95,13 +120,18 @@ This structure implements **clean architecture principles** with clear separatio
 graph TB
     subgraph "🖥️ Console Interface Layer"
         UI[🎮 Spectre.Console UI]:::uiColor
-        Menu[📋 Interactive Menus]:::uiColor
-        Input[⌨️ User Input Handler]:::uiColor
+        DisplayMgr[🎨 Display Manager]:::uiColor
+        MenuMgr[📋 Menu Manager]:::uiColor
     end
-    subgraph "⚙️ Business Logic Layer"
+    subgraph "⚙️ Management Layer"
+        AssetMgr[📦 Asset Manager]:::mgmtColor
+        UserMgr[👤 User Manager]:::mgmtColor
+        ValidationLogic[✅ Input Validation]:::mgmtColor
+    end
+    subgraph "🔧 Business Logic Layer"
         AssetService[📦 Asset Services]:::appColor
         UserService[👤 User Services]:::appColor
-        ValidationService[✅ Validation Logic]:::appColor
+        BusinessRules[📋 Business Rules]:::appColor
     end
     subgraph "💾 Data Access Layer"
         EFContext[🗃️ Entity Framework Context]:::dataColor
@@ -109,26 +139,29 @@ graph TB
         UserModel[👤 User Entity]:::dataColor
     end
     subgraph "🗄️ Storage Layer"
-        InMemoryDB[(💭 In-Memory Database)]:::storageColor
-        FutureSQL[(🔮 Future: SQL Server)]:::storageColor
-        FuturePostgres[(🔮 Future: PostgreSQL)]:::storageColor
+        SQLiteDB[(�️ SQLite Database)]:::storageColor
+        BackupStorage[(� Backup Storage)]:::storageColor
     end
     
-    UI --> Menu
-    Menu --> Input
-    Input --> AssetService
-    Input --> UserService
-    AssetService --> ValidationService
-    UserService --> ValidationService
+    UI --> DisplayMgr
+    DisplayMgr --> MenuMgr
+    MenuMgr --> AssetMgr
+    MenuMgr --> UserMgr
+    AssetMgr --> ValidationLogic
+    UserMgr --> ValidationLogic
+    AssetMgr --> AssetService
+    UserMgr --> UserService
+    AssetService --> BusinessRules
+    UserService --> BusinessRules
     AssetService --> EFContext
     UserService --> EFContext
     EFContext --> AssetModel
     EFContext --> UserModel
-    EFContext --> InMemoryDB
-    EFContext -.-> FutureSQL
-    EFContext -.-> FuturePostgres
+    EFContext --> SQLiteDB
+    SQLiteDB --> BackupStorage
     
     classDef uiColor fill:#74b9ff,stroke:#0984e3,stroke-width:2px,color:#fff
+    classDef mgmtColor fill:#a29bfe,stroke:#6c5ce7,stroke-width:2px,color:#fff
     classDef appColor fill:#00cec9,stroke:#00b894,stroke-width:2px,color:#fff
     classDef dataColor fill:#51cf66,stroke:#40c057,stroke-width:2px,color:#fff
     classDef storageColor fill:#ffd93d,stroke:#fab005,stroke-width:2px,color:#000
@@ -228,7 +261,7 @@ This project leverages these carefully selected NuGet packages:
 |---------|---------|---------|
 | **Microsoft.EntityFrameworkCore** | `9.0.8` | Core ORM framework |
 | **Microsoft.EntityFrameworkCore.Design** | `9.0.8` | Design-time EF tools |
-| **Microsoft.EntityFrameworkCore.InMemory** | `9.0.8` | In-memory database provider |
+| **Microsoft.EntityFrameworkCore.Sqlite** | `9.0.8` | SQLite database provider |
 | **Spectre.Console** | `0.50.0` | Rich console UI framework |
 
 ---
@@ -280,18 +313,31 @@ Select asset: MacBook Pro M2
 ## 🔧 Configuration
 
 ### Database Configuration
-AssetOS currently uses **Microsoft.EntityFrameworkCore.InMemory** for lightweight, portable operation. This approach provides:
+AssetOS uses **SQLite** for robust, file-based persistent data storage. The database file (`Itam.db`) is automatically created and managed by Entity Framework Core. This approach provides:
 
-- ⚡ **Lightning-fast startup** with zero configuration
-- 🧪 **Perfect for development** and testing scenarios  
-- 📱 **Completely portable** - no external dependencies
-- 🔄 **Easy migration path** to persistent databases
+- 💾 **Persistent data storage** with zero-configuration setup
+- ⚡ **Fast performance** for small to medium datasets
+- 📁 **Single file database** - easy backup and deployment
+- 🔄 **ACID compliance** for data integrity
+- 🌐 **Cross-platform compatibility** - works on Windows, macOS, and Linux
+
+### Database Location
+- **Default location**: `ConsoleApp/Itam.db`
+- **Automatic creation**: Database and tables created on first run
+- **Migration support**: Schema updates handled by Entity Framework
+
+### Manager Architecture
+The application uses a layered manager approach:
+- **DisplayManager**: Handles UI rendering and console formatting
+- **MenuManager**: Controls navigation flow and menu interactions  
+- **AssetManager**: Manages all asset-related operations and workflows
+- **UserManager**: Handles user operations and management tasks
 
 ### Future Database Support
-Ready for enterprise deployment with these planned database providers:
+Ready for enterprise deployment with these additional database providers:
 - 🗄️ **SQL Server** - Enterprise-grade relational database
 - 🐘 **PostgreSQL** - Open-source powerhouse
-- 🪶 **SQLite** - Embedded database for small deployments
+- ☁️ **Azure SQL** - Cloud-native database solution
 
 ---
 
@@ -300,28 +346,33 @@ Ready for enterprise deployment with these planned database providers:
 **Planned Enhancements:**
 
 ### 🏢 Enterprise Features
-- ✅ **Persistent Database Support** (SQL Server, PostgreSQL, SQLite)
-- ✅ **Role-Based Access Control** (Admin, Manager, User roles)
-- ✅ **Multi-tenant Architecture** for enterprise deployments
-- ✅ **Audit Logging** for compliance and tracking
+- ✅ **SQLite Database Support** - Production-ready persistent storage
+- ✅ **Manager Architecture** - Organized, maintainable code structure
+- ✅ **OOP Refactored Design** - Clean separation of concerns
+- ⭐ **Role-Based Access Control** (Admin, Manager, User roles)
+- ⭐ **Multi-tenant Architecture** for enterprise deployments
+- ⭐ **Audit Logging** for compliance and tracking
 
 ### 📊 Advanced Functionality  
-- ✅ **Comprehensive Reporting** (asset utilization, user assignments)
-- ✅ **Data Import/Export** (CSV, JSON, Excel integration)
-- ✅ **Asset Lifecycle Management** (procurement, deployment, retirement)
-- ✅ **Automated Asset Discovery** via network scanning
+- ⭐ **Comprehensive Reporting** (asset utilization, user assignments)
+- ⭐ **Data Import/Export** (CSV, JSON, Excel integration)
+- ⭐ **Asset Lifecycle Management** (procurement, deployment, retirement)
+- ⭐ **Automated Asset Discovery** via network scanning
 
 ### 🛠 Development & Deployment
-- ✅ **Complete Test Suite** (unit, integration, and E2E tests)
-- ✅ **Docker Containerization** for cloud deployment
-- ✅ **REST API Layer** for external integrations
-- ✅ **Web Dashboard** complement to console interface
+- ⭐ **Complete Test Suite** (unit, integration, and E2E tests)
+- ⭐ **Docker Containerization** for cloud deployment
+- ⭐ **REST API Layer** for external integrations
+- ⭐ **Web Dashboard** complement to console interface
 
 ### 🔧 Technical Enhancements
-- ✅ **Enhanced Validation & Error Handling**
-- ✅ **Performance Optimization** for large datasets
-- ✅ **Configuration Management** via appsettings.json
-- ✅ **Logging Framework** integration (Serilog)
+- ✅ **Enhanced Manager Architecture** with separation of concerns
+- ✅ **SQLite Integration** for reliable data persistence
+- ✅ **OOP Refactored Program.cs** for better maintainability
+- ⭐ **Enhanced Validation & Error Handling**
+- ⭐ **Performance Optimization** for large datasets
+- ⭐ **Configuration Management** via appsettings.json
+- ⭐ **Logging Framework** integration (Serilog)
 
 ---
 
@@ -340,14 +391,14 @@ Ready for enterprise deployment with these planned database providers:
 - ✅ Delete `bin/` and `obj/` folders, then rebuild
 
 **Data not persisting between sessions**
-- ℹ️ **Expected behavior** - using in-memory database
-- 🔄 Switch to persistent database for permanent storage
-- 📖 Check configuration section for database migration guide
+- ✅ **Fixed** - Now using SQLite for persistent storage
+- 💾 Data automatically saves to `Itam.db` file
+- � All changes persist across application restarts
 
-**Performance issues with large datasets**
-- ⚡ Current version optimized for small to medium datasets
-- 🔮 Enterprise performance optimizations planned
-- 💡 Consider implementing pagination for large lists
+**SQLite database file issues**
+- 📁 Database file `Itam.db` created automatically in ConsoleApp directory
+- � Ensure write permissions in application directory
+- �️ Delete `Itam.db` to reset database (will recreate with seed data)
 
 ---
 
