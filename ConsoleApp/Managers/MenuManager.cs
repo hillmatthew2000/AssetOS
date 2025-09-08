@@ -21,7 +21,7 @@ public class MenuManager
         {
             Console.WriteLine("\nMain Menu:");
             Console.WriteLine("1. Asset Management");
-            Console.WriteLine("2. List Users");
+            Console.WriteLine("2. User Management");
             Console.WriteLine("3. Warranty Expiry Report");
             Console.WriteLine("4. Exit");
             Console.WriteLine("Select an option");
@@ -32,7 +32,7 @@ public class MenuManager
                     await ShowAssetMenuAsync();
                     break;
                 case "2":
-                    await _userManager.ListUsersAsync();
+                    await ShowUserMenuAsync();
                     break;
                 case "3":
                     await _assetManager.WarrantyExpiryReportAsync();
@@ -79,6 +79,39 @@ public class MenuManager
                 await _assetManager.ListAllAssetsAsync();
                 break;
             case "6":
+                return;
+            default:
+                Console.WriteLine("Invalid option. Please try again.");
+                break;
+        }
+    }
+
+    //Display and handle user management submenu
+    private async Task ShowUserMenuAsync()
+    {
+        Console.WriteLine("\n=== User Management ===");
+        Console.WriteLine("1. Add New User");
+        Console.WriteLine("2. Update User");
+        Console.WriteLine("3. Delete User");
+        Console.WriteLine("4. List All Users");
+        Console.WriteLine("5. Return to Main Menu");
+        Console.WriteLine("Select an option:");
+
+        switch (Console.ReadLine())
+        {
+            case "1":
+                await _userManager.AddNewUserAsync();
+                break;
+            case "2":
+                await _userManager.UpdateUserAsync();
+                break;
+            case "3":
+                await _userManager.DeleteUserAsync();
+                break;
+            case "4":
+                await _userManager.ListUsersAsync();
+                break;
+            case "5":
                 return;
             default:
                 Console.WriteLine("Invalid option. Please try again.");

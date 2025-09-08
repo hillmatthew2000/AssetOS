@@ -26,4 +26,32 @@ public class UserService
     {
         return await _context.User.FindAsync(id);
     }
+
+    //Creates a new user in the database
+    public async Task<User> CreateUserAsync(User user)
+    {
+        _context.User.Add(user);
+        await _context.SaveChangesAsync();
+        return user;
+    }
+
+    //Updates an existing user in the database
+    public async Task<bool> UpdateUserAsync(User user)
+    {
+        _context.User.Update(user);
+        var result = await _context.SaveChangesAsync();
+        return result > 0;
+    }
+
+    //Deletes a user from the database by ID
+    public async Task<bool> DeleteUserAsync(int id)
+    {
+        var user = await _context.User.FindAsync(id);
+        if (user == null)
+            return false;
+
+        _context.User.Remove(user);
+        var result = await _context.SaveChangesAsync();
+        return result > 0;
+    }
 }
