@@ -10,21 +10,6 @@
 ![Language](https://img.shields.io/badge/Language-C%23-239120)
 ![EF Core](https://img.shields.io/badge/ORM-EF%20Core-512BD4)
 ![SQLite](https://img.shields.io/badge/Database-SQLite-003B57)
-**SQLite database file issues**
-- 📁 Database file `Itam.db` created automatically in ConsoleApp directory
-- 🔒 Ensure write permissions in application directory
-- 🗑️ Delete `Itam.db` to reset database (will recreate with seed data)
-
-**Performance issues with large datasets**
-- ⚡ Current version optimized for small to medium datasets  
-- 🔮 Enterprise performance optimizations planned
-- 💡 Consider implementing pagination for large lists
-
-**Manager architecture questions**
-- 📋 **MenuManager**: Controls navigation and user flow
-- 🎨 **DisplayManager**: Handles UI rendering and formatting
-- 📦 **AssetManager**: Manages asset operations and workflows
-- 👤 **UserManager**: Handles user-related operationsre-512BD4)
 ![License](https://img.shields.io/badge/License-MIT-brightgreen)
 ![Project Type](https://img.shields.io/badge/Type-Console%20App-orange)
 
