@@ -5,7 +5,7 @@
 
 ## 📋 Database Setup & Initialization
 
-- ✅ SQLite database file created in correct location (%LocalAppData%\ITAM\itam.db)
+- ✅ SQLite database file created in correct location (%LocalAppData%\ConsoleApp\itam.db)
 - ✅ Database schema matches expected structure (Assets, Users tables)
 - ✅ All foreign key relationships properly configured
 - ✅ Initial seed data (users and sample assets) correctly populated
